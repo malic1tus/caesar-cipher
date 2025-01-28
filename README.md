@@ -1,6 +1,8 @@
 
 # Caesar Cipher Encryption
 
+[![Python](https://img.shields.io/badge/python-3.0%2B-green.svg)]
+
 This project provides a Python program to encrypt and decrypt text using the **Caesar cipher**. This cipher is a substitution method where each letter is replaced by another located a fixed distance away in the alphabet.
 
 ----------
