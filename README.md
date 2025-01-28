@@ -1,6 +1,8 @@
 
 # Caesar Cipher Encryption
 
+[![Python](https://img.shields.io/badge/python-3.0%2B-green.svg)]
+
 This project provides a Python program to encrypt and decrypt text using the **Caesar cipher**. This cipher is a substitution method where each letter is replaced by another located a fixed distance away in the alphabet.
 
 ----------
@@ -67,12 +69,12 @@ python caesar_cipher.py
     
 -   Shift: `3`
     
--   Output: `Khoor Zruog`
+-   Output: `Khoor#Zruog`
     
 
 #### Decryption:
 
--   Input: `Khoor Zruog`
+-   Input: `Khoor#Zruog`
     
 -   Shift: `3`
     
@@ -106,27 +108,37 @@ graph TD
     
     %% Encryption Path
     D1 --> E1[Iterate Through Each Character]
-    E1 --> F1{Is Character Alphabetic?}
-    F1 -->|Yes| G1[Shift Character Forward by Value]
-    F1 -->|No| H1[Keep Character As Is]
-    G1 & H1 --> I1[Append to Result]
-    I1 --> J1{More Characters?}
-    J1 -->|Yes| E1
-    J1 -->|No| K1[Combine Result]
+    E1 --> F1[Convert to Unicode Value]
+    F1 --> G1[Add Shift Value]
+    G1 --> H1[Apply Modulo 256]
+    H1 --> I1[Convert Back to Character]
+    I1 --> J1[Append to Result]
+    J1 --> K1{More Characters?}
+    K1 -->|Yes| E1
+    K1 -->|No| L1[Combine Result]
     
     %% Decryption Path
     D2 --> E2[Iterate Through Each Character]
-    E2 --> F2{Is Character Alphabetic?}
-    F2 -->|Yes| G2[Shift Character Backward by Value]
-    F2 -->|No| H2[Keep Character As Is]
-    G2 & H2 --> I2[Append to Result]
-    I2 --> J2{More Characters?}
-    J2 -->|Yes| E2
-    J2 -->|No| K2[Combine Result]
+    E2 --> F2[Convert to Unicode Value]
+    F2 --> G2[Subtract Shift Value]
+    G2 --> H2[Apply Modulo 256]
+    H2 --> I2[Convert Back to Character]
+    I2 --> J2[Append to Result]
+    J2 --> K2{More Characters?}
+    K2 -->|Yes| E2
+    K2 -->|No| L2[Combine Result]
     
-    K1 --> L1[Encrypted Text]
-    K2 --> L2[Decrypted Text]
-    L1 & L2 --> M[End]
+    L1 --> M1[Encrypted Text]
+    L2 --> M2[Decrypted Text]
+    M1 & M2 --> N[End]
+
+    %% Add notes for clarity
+    subgraph "Character Support"
+        Note1[Supports all printable characters]
+        Note2[Including accented letters]
+        Note3[Symbols and numbers]
+        Note4[Uses Unicode values]
+    end
 ```
 
 ----------
