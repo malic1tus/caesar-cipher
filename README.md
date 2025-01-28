@@ -12,6 +12,8 @@ This project provides a Python program to encrypt and decrypt text using the **C
 -   Encrypt text with a specified shift.
     
 -   Decrypt text that has been previously encrypted.
+
+-   Bruteforce decryption to try all possible shifts.
     
 -   Simple command-line interface.
     
@@ -57,6 +59,8 @@ python caesar_cipher.py
     -   Encrypt text.
         
     -   Decrypt text.
+  
+    -   Bruteforce decrypt an encrypted text.
         
     -   Exit the program.
         
@@ -81,11 +85,21 @@ python caesar_cipher.py
 -   Output: `Hello World`
     
 
+### Bruteforce Decryption:
+
+-   Input: Khoor#Zruog
+-   Output: Shows all possible shift values (0-255) and their resulting text
+
+-   Shift 3: Hello World
+-   Shift 4: Gdkkn Vnqkc
+-   And so on...
+
+
 ----------
 
 ## Project Structure
 
--   `caesar_cipher.py`: Contains the main code for encryption and decryption.
+-   `caesar_cipher.py`: Contains the main code for encryption, decryption, and bruteforce functionality
     
 
 ----------
@@ -104,7 +118,7 @@ config:
 graph TD
     A[Start] --> B[Input Text]
     B --> C[Input Shift Value]
-    C --> D1[Encrypt Process] & D2[Decrypt Process]
+    C --> D1[Encrypt Process] & D2[Decrypt Process] & D3[Bruteforce Process]
     
     %% Encryption Path
     D1 --> E1[Iterate Through Each Character]
@@ -128,10 +142,19 @@ graph TD
     K2 -->|Yes| E2
     K2 -->|No| L2[Combine Result]
     
+    %% Bruteforce Path
+    D3 --> E3[Try All Shifts 0-255]
+    E3 --> F3[Decrypt with Current Shift]
+    F3 --> G3[Display Result]
+    G3 --> H3{More Shifts?}
+    H3 -->|Yes| E3
+    H3 -->|No| L3[Complete]
+    
     L1 --> M1[Encrypted Text]
     L2 --> M2[Decrypted Text]
-    M1 & M2 --> N[End]
-
+    L3 --> M3[All Possible Decryptions]
+    M1 & M2 & M3 --> N[End]
+    
     %% Add notes for clarity
     subgraph "Character Support"
         Note1[Supports all printable characters]
