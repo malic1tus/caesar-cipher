@@ -7,27 +7,27 @@ This project provides a Python program to encrypt and decrypt text using the **C
 
 ----------
 
-## Features
+## ✨ Features
 
--   Encrypt text with a specified shift.
-    
--   Decrypt text that has been previously encrypted.
+- 🔒 **Encrypt** text with a specified shift.
 
--   Bruteforce decryption to try all possible shifts.
-    
--   Simple command-line interface.
+- 🔓 **Decrypt** text using a known shift value.
+
+- 🔄 **Bruteforce decryption** to try all possible shifts.
+
+- 🎛️ **Simple command-line interface**.
     
 
 ----------
 
-## Prerequisites
+## 🛠️ Prerequisites
 
 -   Python 3 or higher.
     
 
 ----------
 
-## Installation
+## 🚀 Installation
 
 1.  Clone the repository:
     
@@ -43,9 +43,16 @@ git clone https://github.com/malic1tus/caesar-cipher
 cd caesar-cipher
 ```
 
+3.  Install the dependencies:
+
+
+```
+pip install -r requirements.txt
+```
+
 ----------
 
-## Usage
+## 🧑‍💻 Usage
 
 1.  Run the program:
     
@@ -56,16 +63,13 @@ python caesar_cipher.py
 
 2.  Follow the terminal instructions to:
     
-    -   Encrypt text.
-        
-    -   Decrypt text.
-  
-    -   Bruteforce decrypt an encrypted text.
-        
-    -   Exit the program.
+    -   🔒 Encrypt a text.
+    -   🔓 Decrypt a text.
+    -   🔄 Bruteforce decrypt an encrypted text.
+    -   ❌ Exit the program.
         
 
-### Example:
+### ✍️ Example:
 
 #### Encryption:
 
@@ -97,14 +101,14 @@ python caesar_cipher.py
 
 ----------
 
-## Project Structure
+## 📂 Project Structure
 
 -   `caesar_cipher.py`: Contains the main code for encryption, decryption, and bruteforce functionality
     
 
 ----------
 
-## Flowchart
+## 📊 Flowchart
 
 Below is a flowchart representing how the Caesar cipher encryption works:
 
@@ -154,21 +158,13 @@ graph TD
     L2 --> M2[Decrypted Text]
     L3 --> M3[All Possible Decryptions]
     M1 & M2 & M3 --> N[End]
-    
-    %% Add notes for clarity
-    subgraph "Character Support"
-        Note1[Supports all printable characters]
-        Note2[Including accented letters]
-        Note3[Symbols and numbers]
-        Note4[Uses Unicode values]
-    end
 ```
 
 ----------
 
-## Contribution
+## 🤝 Contribution
 
-Contributions are welcome!
+Contributions are welcome! 🚀
 
 1.  Fork the repository.
     
@@ -183,6 +179,6 @@ Contributions are welcome!
 
 ----------
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.

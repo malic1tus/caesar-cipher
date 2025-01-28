@@ -1,3 +1,10 @@
+from rich.console import Console
+from rich.prompt import Prompt
+from rich.table import Table
+from rich.panel import Panel
+
+console = Console()
+
 def caesar_encrypt(text, shift):
     """Encrypts text using Caesar cipher with a given shift, including accented characters, symbols, and numbers."""
     encrypted = ""
@@ -15,39 +22,47 @@ def caesar_decrypt(text, shift):
 
 def bruteforce_decrypt(text):
     """Attempts to decrypt text by trying all possible shift values."""
-    print("\nBruteforce results:")
-    print("-" * 50)
+    table = Table(title="Bruteforce Results", show_header=True, header_style="bold magenta")
+    table.add_column("Shift", justify="right")
+    table.add_column("Decrypted Text", overflow="fold")
+
     for shift in range(256):  # Try all possible shifts (0-255)
         decrypted = caesar_decrypt(text, shift)
-        print(f"Shift {shift:3d}: {decrypted[:50]}{'...' if len(decrypted) > 50 else ''}")
-    print("-" * 50)
+        table.add_row(str(shift), decrypted[:50] + ("..." if len(decrypted) > 50 else ""))
+
+    console.print(table)
 
 def main():
-    print("Welcome to the Extended Caesar Cipher program!")
+    console.print(Panel("[bold cyan]Welcome to the Extended Caesar Cipher Program![/bold cyan]", expand=False))
+
     while True:
-        print("\nChoose an option:")
-        print("1 - Encrypt a text")
-        print("2 - Decrypt a text")
-        print("3 - Bruteforce decrypt")
-        print("4 - Exit")
-        choice = input("Your choice: ")
+        console.print("\n[bold yellow]Choose an option:[/bold yellow]")
+        console.print("[bold green]1[/bold green] - 🔒 Encrypt a text")
+        console.print("[bold green]2[/bold green] - 🔓 Decrypt a text")
+        console.print("[bold green]3[/bold green] - 🔄 Bruteforce decrypt")
+        console.print("[bold green]4[/bold green] - ❌ Exit")
+
+        choice = Prompt.ask("Your choice", choices=["1", "2", "3", "4"], default="4")
 
         if choice == '1':
-            text = input("Enter the text to encrypt: ")
-            shift = int(input("Enter the shift value (integer): "))
-            print("Encrypted text:", caesar_encrypt(text, shift))
+            text = Prompt.ask("Enter the text to encrypt")
+            shift = int(Prompt.ask("Enter the shift value (integer)", default="0"))
+            encrypted_text = caesar_encrypt(text, shift)
+            console.print(Panel(f"[bold green]Encrypted text:[/bold green] {encrypted_text}", expand=False))
+
         elif choice == '2':
-            text = input("Enter the text to decrypt: ")
-            shift = int(input("Enter the shift value used for encryption: "))
-            print("Decrypted text:", caesar_decrypt(text, shift))
+            text = Prompt.ask("Enter the text to decrypt")
+            shift = int(Prompt.ask("Enter the shift value used for encryption", default="0"))
+            decrypted_text = caesar_decrypt(text, shift)
+            console.print(Panel(f"[bold green]Decrypted text:[/bold green] {decrypted_text}", expand=False))
+
         elif choice == '3':
-            text = input("Enter the encrypted text to bruteforce: ")
+            text = Prompt.ask("Enter the encrypted text to bruteforce")
             bruteforce_decrypt(text)
+
         elif choice == '4':
-            print("Thank you for using the program. Goodbye!")
+            console.print("[bold cyan]Thank you for using the program. Goodbye![/bold cyan]")
             break
-        else:
-            print("Invalid option. Please try again.")
 
 if __name__ == "__main__":
     main()
