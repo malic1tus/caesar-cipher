@@ -1,4 +1,3 @@
-
 # Caesar Cipher Encryption
 
 [![Python](https://img.shields.io/badge/python-3.0%2B-green.svg)]
@@ -15,7 +14,11 @@ This project provides a Python program to encrypt and decrypt text using the **C
 
 - 🔄 **Bruteforce decryption** to try all possible shifts.
 
-- 🎛️ **Simple command-line interface**.
+- 📁 **File processing** to encrypt/decrypt entire files.
+
+- 📊 **Operation history** with complete input/output tracking.
+
+- 🎛️ **Rich command-line interface** with colored output and tables.
     
 
 ----------
@@ -63,10 +66,12 @@ python caesar_cipher.py
 
 2.  Follow the terminal instructions to:
     
-    -   🔒 Encrypt a text.
-    -   🔓 Decrypt a text.
-    -   🔄 Bruteforce decrypt an encrypted text.
-    -   ❌ Exit the program.
+    -   🔒 Encrypt a text
+    -   🔓 Decrypt a text
+    -   🔄 Bruteforce decrypt an encrypted text
+    -   📁 Process files for encryption/decryption
+    -   📊 View operation history
+    -   ❌ Exit the program
         
 
 ### ✍️ Example:
@@ -98,12 +103,21 @@ python caesar_cipher.py
 -   Shift 4: Gdkkn Vnqkc
 -   And so on...
 
+### History Tracking:
+
+The program maintains a complete history of all operations, displaying:
+- Operation type (encrypt/decrypt)
+- Full input text
+- Full output text
+- Shift value used
+- Timestamp of operation
 
 ----------
 
 ## 📂 Project Structure
 
--   `caesar_cipher.py`: Contains the main code for encryption, decryption, and bruteforce functionality
+-   `caesar_cipher.py`: Main program file containing encryption, decryption, bruteforce, and history functionality
+-   `requirements.txt`: List of Python dependencies
     
 
 ----------
