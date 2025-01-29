@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional, Dict, List
 from rich.console import Console
 from rich.prompt import Prompt, IntPrompt
-from rich.table import Table
+from rich.table import Table, box
 from rich.panel import Panel
 from rich.progress import Progress
 from rich.logging import RichHandler
@@ -162,10 +162,18 @@ def display_menu() -> None:
 
 def display_results_table(results: List[Dict], limit: int = 10) -> None:
     """Display decryption results in a table."""
-    table = Table(title="Decryption Results", show_header=True, header_style="bold magenta")
-    table.add_column("Shift", justify="right")
-    table.add_column("Score", justify="right")
-    table.add_column("Decrypted Text", overflow="fold")
+    table = Table(
+        title="[bold]Decryption Results[/bold]",
+        box=None,
+        show_header=True,
+        header_style="bold magenta",
+        padding=(0, 2),
+        expand=True
+    )
+    
+    table.add_column("Shift", justify="right", style="cyan", no_wrap=True)
+    table.add_column("Score", justify="right", style="green", no_wrap=True)
+    table.add_column("Decrypted Text", style="white", overflow="fold", max_width=60)
     
     for result in results[:limit]:
         table.add_row(
@@ -174,7 +182,9 @@ def display_results_table(results: List[Dict], limit: int = 10) -> None:
             result["text"][:50] + ("..." if len(result["text"]) > 50 else "")
         )
         
+    console.print("\n")
     console.print(table)
+    console.print("\n")
 
 def display_history(cipher: CaesarCipher) -> None:
     """Display operation history."""
@@ -182,23 +192,33 @@ def display_history(cipher: CaesarCipher) -> None:
         console.print("[yellow]No history available[/yellow]")
         return
         
-    table = Table(title="Operation History", show_header=True, header_style="bold magenta")
-    table.add_column("Timestamp", justify="left")
-    table.add_column("Operation", justify="center")
-    table.add_column("Input", overflow="fold")
-    table.add_column("Output", overflow="fold")
-    table.add_column("Shift", justify="right")
+    table = Table(
+        title="[bold]Operation History[/bold]",
+        box=None,
+        show_header=True,
+        header_style="bold magenta",
+        padding=(0, 2),
+        expand=True
+    )
+    
+    table.add_column("Timestamp", justify="left", style="cyan", no_wrap=True)
+    table.add_column("Operation", justify="center", style="green", no_wrap=True)
+    table.add_column("Input", style="white", max_width=30, overflow="fold")
+    table.add_column("Output", style="white", max_width=30, overflow="fold")
+    table.add_column("Shift", justify="right", style="yellow", no_wrap=True)
     
     for entry in reversed(cipher.history[-10:]):  # Show last 10 entries
         table.add_row(
             entry["timestamp"].split("T")[0],
             entry["operation"],
-            entry["input_text"],  # Removed truncation
-            entry["output_text"],  # Removed truncation
+            entry["input_text"][:30] + ("..." if len(entry["input_text"]) > 30 else ""),
+            entry["output_text"][:30] + ("..." if len(entry["output_text"]) > 30 else ""),
             str(entry["shift"])
         )
-        
+    
+    console.print("\n")
     console.print(table)
+    console.print("\n")
 
 def main():
     """Main program loop."""
