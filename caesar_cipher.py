@@ -193,8 +193,8 @@ def display_history(cipher: CaesarCipher) -> None:
         table.add_row(
             entry["timestamp"].split("T")[0],
             entry["operation"],
-            entry["input_text"][:20] + "...",
-            entry["output_text"][:20] + "...",
+            entry["input_text"],  # Removed truncation
+            entry["output_text"],  # Removed truncation
             str(entry["shift"])
         )
         
