@@ -25,7 +25,7 @@ console = Console()
 
 class CaesarCipher:
     """Class handling the Caesar cipher encryption/decryption logic."""
-    
+
     def __init__(self):
         self.history: List[Dict] = []
         self.history_file = Path("cipher_history.json")
@@ -63,7 +63,9 @@ class CaesarCipher:
     @staticmethod
     def validate_shift(shift: int) -> int:
         """Validate and normalize the shift value."""
-        return shift % 256
+        if not (-255 <= shift <= 255):
+            raise ValueError("Shift must be between -255 and 255")
+        return shift
 
     def encrypt(self, text: str, shift: int) -> str:
         """Encrypt text using Caesar cipher."""
@@ -107,6 +109,11 @@ class CaesarCipher:
                 
         return {k: v/total for k, v in freq.items()}
 
+    def _score_decrypted_text(self, decrypted_text: str) -> float:
+        """Calculate a score for the decrypted text based on letter frequency."""
+        freq = self.analyze_frequency(decrypted_text)
+        return sum(freq.get(c, 0) for c in string.ascii_letters + string.whitespace)
+
     def bruteforce_decrypt(self, text: str) -> List[Dict]:
         """Attempt to decrypt text using all possible shifts."""
         results = []
@@ -116,10 +123,7 @@ class CaesarCipher:
             
             for shift in range(256):
                 decrypted = self.decrypt(text, shift)
-                freq = self.analyze_frequency(decrypted)
-                
-                # Simple scoring based on common English letters
-                score = sum(freq.get(c, 0) for c in string.ascii_letters + string.whitespace)
+                score = self._score_decrypted_text(decrypted)
                 
                 results.append({
                     "shift": shift,
@@ -129,7 +133,6 @@ class CaesarCipher:
                 
                 progress.update(task, advance=1)
                 
-        # Sort results by score, highest first
         results.sort(key=lambda x: x["score"], reverse=True)
         return results
 
@@ -137,12 +140,12 @@ class CaesarCipher:
         """Process an entire file."""
         try:
             with open(input_path, 'r') as f:
-                text = f.read()
+                lines = f.readlines()
                 
-            processed = self.encrypt(text, shift) if encrypt else self.decrypt(text, shift)
+            processed_lines = [self.encrypt(line, shift) if encrypt else self.decrypt(line, shift) for line in lines]
             
             with open(output_path, 'w') as f:
-                f.write(processed)
+                f.writelines(processed_lines)
                 
             log.info(f"File processed successfully: {output_path}")
             
