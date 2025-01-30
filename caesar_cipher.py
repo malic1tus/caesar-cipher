@@ -29,6 +29,7 @@ class CaesarCipher:
     def __init__(self):
         self.history: List[Dict] = []
         self.history_file = Path("cipher_history.json")
+        self.max_history_entries = 100  # Maximum number of entries to store
         self._load_history()
 
     def _load_history(self) -> None:
@@ -42,15 +43,19 @@ class CaesarCipher:
             self.history = []
 
     def _save_history(self) -> None:
-        """Save operation history to file."""
+        """Save operation history to file, keeping only the latest 100 entries."""
         try:
+            # Keep only the last 100 entries
+            if len(self.history) > self.max_history_entries:
+                self.history = self.history[-self.max_history_entries:]
+
             with open(self.history_file, "w") as f:
                 json.dump(self.history, f, indent=2)
         except Exception as e:
             log.error(f"Error saving history: {e}")
 
     def _add_to_history(self, operation: str, input_text: str, output_text: str, shift: int) -> None:
-        """Add an operation to history."""
+        """Add an operation to history, keeping the history size in check."""
         self.history.append({
             "timestamp": datetime.now().isoformat(),
             "operation": operation,
@@ -110,30 +115,45 @@ class CaesarCipher:
         return {k: v/total for k, v in freq.items()}
 
     def _score_decrypted_text(self, decrypted_text: str) -> float:
-        """Calculate a score for the decrypted text based on letter frequency."""
+        """Calculate a score for the decrypted text based on character frequency."""
+        # Utiliser un modèle de fréquence plus général qui prend en compte les caractères spéciaux
         freq = self.analyze_frequency(decrypted_text)
-        return sum(freq.get(c, 0) for c in string.ascii_letters + string.whitespace)
+        # Par exemple, on pourrait définir un score basé sur les caractères imprimables et les symboles.
+        printable_chars = string.ascii_letters + string.digits + string.punctuation + string.whitespace
+        return sum(freq.get(c, 0) for c in printable_chars)
 
     def bruteforce_decrypt(self, text: str) -> List[Dict]:
         """Attempt to decrypt text using all possible shifts."""
         results = []
+
+        # Nettoyer l'affichage avant de commencer
+        console.clear()
+        
+        # Affichage du message de démarrage
+        console.print("\n[bold cyan]Bruteforce decryption in progress...[/bold cyan]\n")
         
         with Progress() as progress:
             task = progress.add_task("[cyan]Trying all shifts...", total=256)
-            
+
             for shift in range(256):
                 decrypted = self.decrypt(text, shift)
                 score = self._score_decrypted_text(decrypted)
-                
+
                 results.append({
                     "shift": shift,
                     "text": decrypted,
                     "score": score
                 })
-                
+
+                # Mise à jour du progrès
                 progress.update(task, advance=1)
-                
+            
+            # Séparation des résultats de l'entrée utilisateur
+            console.print("\n[bold cyan]Bruteforce completed! Here are the top results:[/bold cyan]\n")
+        
+        # Trier les résultats
         results.sort(key=lambda x: x["score"], reverse=True)
+        
         return results
 
     def process_file(self, input_path: str, output_path: str, shift: int, encrypt: bool = True) -> None:
@@ -182,7 +202,7 @@ def display_results_table(results: List[Dict], limit: int = 10) -> None:
         table.add_row(
             str(result["shift"]),
             f"{result['score']:.3f}",
-            result["text"][:50] + ("..." if len(result["text"]) > 50 else "")
+            result["text"]
         )
         
     console.print("\n")
@@ -255,20 +275,16 @@ def main():
                 output_path = Prompt.ask("Enter output file path")
                 shift = IntPrompt.ask("Enter shift value", default=3)
                 operation = Prompt.ask("Choose operation", choices=["encrypt", "decrypt"], default="encrypt")
-                
-                cipher.process_file(input_path, output_path, shift, operation == "encrypt")
-                console.print(f"[green]File processed successfully: {output_path}[/green]")
+                cipher.process_file(input_path, output_path, shift, encrypt=(operation == "encrypt"))
 
             elif choice == '5':  # View history
                 display_history(cipher)
 
             elif choice == '6':  # Exit
-                console.print("[bold cyan]Thank you for using the program. Goodbye![/bold cyan]")
+                console.print("[bold red]Goodbye![/bold red]")
                 break
-
         except Exception as e:
             log.error(f"An error occurred: {e}")
-            console.print(f"[bold red]Error:[/bold red] {str(e)}")
 
 if __name__ == "__main__":
     main()
